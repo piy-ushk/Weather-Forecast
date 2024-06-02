@@ -1,0 +1,383 @@
+﻿body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #83a4d4;
+    /*background: url('https://assets.msn.com/weathermapdata/1/static/images/webps/v1.0/Cloudy 1.webp') no-repeat center center fixed;
+    background-size: cover;*/
+    color: #fff;
+    transition: background-color 0.5s ease;
+}
+    /* Light theme */
+    body.light-theme {
+        background: linear-gradient(to bottom, #00b4d8, #ffffff);
+        color: #333;
+    }
+
+    /* Dark theme */
+    body.dark-theme {
+        background: linear-gradient(to bottom, #002855, #000000);
+        background-size: 100%;
+        color: #fff;
+        transition: background-color 0.5s ease;
+    }
+
+/* The switch - the box around the slider */
+.toggle {
+    font-size: 17px;
+    position: relative;
+    top: 10%;
+    display: inline;
+    left: 30%;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+}
+
+    /* Hide default HTML checkbox */
+    .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+::-webkit-scrollbar {
+    width: 10px;
+    
+}
+
+
+::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background: #03045e
+    ;
+}
+
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #023e8a;
+    }
+
+/* The slider */
+.slider {
+    --background: #28096b;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--background);
+    transition: .5s;
+    border-radius: 30px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 1.4em;
+        width: 1.4em;
+        border-radius: 50%;
+        left: 10%;
+        bottom: 15%;
+        box-shadow: inset 8px -4px 0px 0px #fff000;
+        background: var(--background);
+        transition: .5s;
+    }
+
+input:checked + .slider {
+    background-color: #522ba7;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+        box-shadow: inset 15px -4px 0px 15px #fff000;
+    }
+
+header {
+    background: linear-gradient(to bottom right, #3498db, #2c3e50);
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    width: 200px;
+    margin-right: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    button:hover {
+        background-color: #27ae60;
+    }
+
+main {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards;
+}
+
+#currentWeather {
+    text-align: center;
+    padding: 50px;
+    /*background-color: rgba(255, 255, 255, 0.6);*/
+    /*border-radius: 10px;*/
+     box-shadow: 30px 10px 20px rgba(0, 0, 0, 0.8);
+    border-radius: 60px;
+    /*box-shadow: 6px 16px 130px #353544, -16px -6px 30px #d3d3ff;*/
+    opacity: 1;
+    border-top-color:aqua;
+    background-color: #023047;
+    color: white;
+    transition: opacity 0.3s ease-in-out;
+    position: relative;
+    z-index: 1;
+    border-radius: 50px;
+    /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);  */
+    transform: scale(1);
+    animation: fadeIn 2s ease-in-out;
+}
+    #currentWeather:hover {
+        transform: scale(1.05); /* Scale up on hover for an interactive effect */
+    }
+    #currentWeather::after {
+        content: '';
+       /* border-radius: 70px;*/
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3); /* Overlay to enhance contrast and readability */
+        border-radius: 0px; /* Ensure overlay matches box shape */
+    }
+   .button{
+      
+   }
+
+footer {
+    background: linear-gradient(to bottom right, #34495e, #2c3e50);
+    color: #fff;
+    text-align: center;
+    padding: 1px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+.A{
+    background-color:aqua;
+}
+.A:hover{
+    cursor:pointer;
+   
+}
+#map {
+    height: 600px;
+    width: 50%;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px); /* Slide in from top */
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/*main.rain::after {
+    content: '';
+    background-position: var(--rain-background-position, 0% 0%);*/
+    /* other styles */
+/*}
+
+main.sun::after {
+    content: '';
+    transform: var(--sun-transform, translate(-50%, -50%) rotate(0deg));*/
+    /* other styles */
+/*}
+
+main.cloud::before {
+    content: '';
+    transform: var(--cloud-transform, translateX(-100%));*/
+    /* other styles */
+/*}*/
+
+.rain ::after {
+    content: url(rain.svg);
+    position: absolute;
+    top: 10%;
+    left: 35%;
+    z-index:2;
+    font-size:100px;
+    width: 200%;
+    height: 200%;
+   /* background: url('https://assets.codepen.io/216619/rain.png') top left repeat;*/
+    animation: rain 7s linear infinite;
+}
+
+@keyframes rain  {
+    0% {
+        transform: translate(-50%, -50%);
+    }
+
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Sun animation */
+.sun ::after {
+    content: "☀";
+    position: fixed;
+    top: 3%;
+    left: 35%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    animation: sun 5s linear infinite;
+    /* background: url('https://cdn.dribbble.com/users/186452/screenshots/1732132/media/851c3eac790f952f3c5f7de859ae38a3.gif');*/
+}
+
+@keyframes sun  {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Cloud animation */
+.cloud ::before {
+    content: "⛅";
+    position: absolute;
+    top: 20%;
+    right: 450px;
+    left: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+    font-size: 50px;
+    animation: cloud 5s linear infinite;
+   /* #currentWeather:background url('giphy.gif');*/
+}
+/*#currentWeather:after {
+    background:url('giphy.gif');
+}*/
+@keyframes cloud  {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(40%);
+    }
+}
+
+.typewriter {
+    border-right: 2px solid #fff; /* Adjust border color */
+    white-space: pre-wrap;
+    animation: typing 3s steps(30, end), blink-caret 0.5s step-end infinite alternate;
+}
+
+@keyframes typing {
+    from {
+        width: 0
+    }
+}
+
+@keyframes blink-caret {
+    50% {
+        border-color: transparent
+    }
+}
+
+
+
+/*.rain {
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5) 50%, transparent 50%, transparent 100%), url('https://www.flaticon.com/free-icon/rainy-day_4724094?term=rainy+weather&page=1&position=3&origin=search&related_id=4724094');
+    background-size: auto 200%;
+    animation: rain 2s linear infinite;
+}
+.sun {
+    background-image: url('https://www.flaticon.com/free-icon/sun_4814268?term=sunny+weather&page=1&position=1&origin=tag&related_id=4814268');
+    animation: sun 4s linear infinite;
+}
+
+.cloud {
+    background-image: url('https://www.flaticon.com/free-icon/cloudy_1163661?term=cloudy+weather&page=1&position=3&origin=search&related_id=1163661');
+    animation: cloud 6s linear infinite alternate;
+}*/
+
+h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+hr {
+    width: 100%;
+    border: none;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: 20px 0;
+}
+
+img {
+    width: 40px;
+    height: 40px;
+}

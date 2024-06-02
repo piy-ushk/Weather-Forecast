@@ -1,0 +1,250 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Weather Forecast</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="weather.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <style>
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weather Forecast</h1>
+        <label class="toggle">
+            <input type="checkbox" id="themeToggle" onclick="toggleTheme()">
+            <span class="slider"></span>
+
+        </label>
+        <input type="text" id="locationInput" placeholder="Enter city name" oninput="showDropdown()" required>
+        <button onclick="getInfo()">Get Weather</button>
+        <div id="dropdown" class="dropdown-content"></div>
+    </header>
+    <main>
+        <div id="currentWeather" class="typewriter">
+            <p id="promptMessage">Enter a city name to check weather status</p>
+            
+        </div>
+
+        <div id="forecast" class="button"></div>
+
+        <div id="map" style="height: 500px;"></div>
+    </main>
+    <footer>
+        <p>Created By Piyush</p><br />
+        <p>&copy;Powered by <a class="A" href="https://openweathermap.org/" target="_blank">OpenWeatherMap</a></p>
+    </footer>
+    
+        <script>
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark-theme');
+}
+
+function showDropdown() {
+    const input = document.getElementById('locationInput').value;
+    const dropdown = document.getElementById('dropdown');
+
+    dropdown.innerHTML = '';
+
+    const similarPlaces = [
+        { name: 'Pune' },
+        { name: 'Belgaum' },
+        { name: 'Rome' }
+    ];
+
+    const filteredPlaces = similarPlaces.filter(place =>
+        place.name.toLowerCase().includes(input.toLowerCase())
+    );
+
+    filteredPlaces.forEach(place => {
+        const dropdownItem = document.createElement('div');
+        dropdownItem.classList.add('dropdown-item');
+        dropdownItem.textContent = place.name;
+        dropdownItem.addEventListener('click', () => {
+            document.getElementById('locationInput').value = place.name;
+            dropdown.style.display = 'none';
+        });
+        dropdown.appendChild(dropdownItem);
+    });
+
+    dropdown.style.display = filteredPlaces.length ? 'block' : 'none';
+}
+
+function getInfo() {
+    const cityName = document.getElementById('locationInput').value;
+    if (!cityName) {
+        alert('Please enter a city name');
+        return;
+    }
+
+    getWeather(cityName);
+    showMap(cityName);
+}
+
+function getWeather(city) {
+    const apiKey = 'bd5e378503939ddaee76f12ad7a97608';
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    const currentWeather = document.getElementById('currentWeather');
+    currentWeather.innerHTML = 'Loading...';
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            const weatherStatus = `${data.name}: ${Math.round(data.main.temp)}°C, ${data.weather[0].description}, Humidity: ${data.main.humidity}%, Wind Speed: ${data.wind.speed} m/s, Air Pressure: ${data.main.pressure} hPa`;
+            typeWriter(currentWeather, weatherStatus);
+
+            setAnimation(data.weather[0].main, document.querySelector('main'));
+        })
+        .catch(error => {
+            console.error('Error fetching weather data:', error);
+            currentWeather.innerHTML = `<p>Unable to fetch weather data. Please try again later.</p>`;
+        });
+}
+
+function showMap(cityName) {
+    const mapContainer = document.getElementById('map');
+    mapContainer.innerHTML = '';
+
+    const map = L.map(mapContainer).setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+    }).addTo(map);
+
+    fetch(`https://nominatim.openstreetmap.org/search?q=${cityName}&format=json`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const { lat, lon } = data[0];
+                map.setView([lat, lon], 13);
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`<b>${cityName}</b>`)
+                    .openPopup();
+            } else {
+                alert(`Could not find ${cityName} on the map`);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.');
+        });
+}
+
+function setAnimation(weather, mainSection) {
+    mainSection.classList.remove('rain', 'sun', 'cloud');
+
+    switch (weather.toLowerCase()) {
+        case 'rain':
+            mainSection.classList.add('rain');
+            break;
+        case 'clear':
+            mainSection.classList.add('sun');
+            break;
+        case 'clouds':
+            mainSection.classList.add('cloud');
+            break;
+        default:
+            mainSection.classList.add('sun');
+    }
+}
+
+            
+           let lastScrollPosition = 0;
+
+            window.addEventListener('scroll', function () {
+                const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (currentScrollPosition > lastScrollPosition) {
+                    // Scrolling down
+                    moveBackgroundAnimation('down');
+                } else {
+                    // Scrolling up
+                    moveBackgroundAnimation('up');
+                }
+
+                lastScrollPosition = currentScrollPosition;
+            });
+
+            function moveBackgroundAnimation(direction) {
+                const mainElement = document.querySelector('main');
+
+                if (mainElement) {
+                    // Handle rain animation
+                    if (mainElement.classList.contains('rain')) {
+                        const style = getComputedStyle(mainElement, '::after');
+                        const currentBackgroundPosition = style.backgroundPosition || '0% 0%';
+                        const [x, y] = currentBackgroundPosition.split(' ');
+                        let newX = parseFloat(x);
+                        let newY = parseFloat(y);
+
+                        if (direction === 'down') {
+                            newY += 1;
+                        } else {
+                            newY -= 1;
+                        }
+
+                        mainElement.style.setProperty('--rain-background-position', `${newX}% ${newY}%`);
+                    }
+
+                    // Handle sun animation
+                    if (mainElement.classList.contains('sun')) {
+                        const style = getComputedStyle(mainElement, '::after');
+                        const currentTransform = style.transform || 'translate(-50%, -50%) rotate(0deg)';
+                        const transformMatch = currentTransform.match(/translate\(-50%, -50%\) rotate\((-?\d+)deg\)/);
+                        let newRotate = parseFloat(transformMatch[1]);
+
+                        if (direction === 'down') {
+                            newRotate += 1;
+                        } else {
+                            newRotate -= 1;
+                        }
+
+                        mainElement.style.setProperty('--sun-transform', `translate(-50%, -50%) rotate(${newRotate}deg)`);
+                    }
+
+                    // Handle cloud animation
+                    if (mainElement.classList.contains('cloud')) {
+                        const style = getComputedStyle(mainElement, '::before');
+                        const currentTransform = style.transform || 'translateX(-100%)';
+                        const transformMatch = currentTransform.match(/translateX\((-?\d+)%\)/);
+                        let newTranslateX = parseFloat(transformMatch[1]);
+
+                        if (direction === 'down') {
+                            newTranslateX += 1;
+                        } else {
+                            newTranslateX -= 1;
+                        }
+
+                        mainElement.style.setProperty('--cloud-transform', `translateX(${newTranslateX}%)`);
+                    }
+                }
+            }
+
+            // Function for typewriter effect
+            function typeWriter(element, text) {
+                let i = 0;
+                const speed = 50; // typing speed in milliseconds
+                element.textContent = '';
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                type();
+            }
+
+    </script>
+
+    
+</body>
+</html>
+  
