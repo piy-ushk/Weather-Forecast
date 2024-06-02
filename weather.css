@@ -291,7 +291,7 @@ main.cloud::before {
 
 /* Cloud animation */
 .cloud ::before {
-    content: "⛅";
+    content: "";
     position: absolute;
     top: 20%;
     right: 450px;
